@@ -6,7 +6,7 @@
  * 
  */
 
-#include "Image.h"
+#include "Image.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -21,20 +21,23 @@ namespace MKHSEG001
 {
     class Ops
     {
-    public:
+        private:
+            string operation;
+            
+        public:
 
-        void add(string image1, string image2, string outImg);
+            void add(string image1, string image2, string outImg);
 
-        void subtract(string image1, string image2, string outImg);
+            void subtract(string image1, string image2, string outImg);
 
-        void invert(string image1, string outImg);
+            void invert(string image1, string outImg);
 
-        void mask(string image1, string image2, string outImg);
+            void mask(string image1, string image2, string outImg);
 
-        void threshold(string image1, int threshold, string outImg);
+            void threshold(string image1, int threshold, string outImg);
 
-        // extra credit, not requirement
-        void filter(string image, string filterName, string outImg);
+            // extra credit, not requirement
+            void filter(string image, string filterName, string outImg);
     };
 } // namespace Ops
 

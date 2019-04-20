@@ -28,7 +28,7 @@ namespace MKHSEG001
             int N;
             float* valPtr;
             // get values from file
-            void fileVal(string file);
+            void loadVals(string file);
     };
 } // namespace MKHSEG001
 

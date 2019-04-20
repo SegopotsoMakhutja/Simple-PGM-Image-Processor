@@ -1,4 +1,12 @@
-#include "Image.h"
+/**
+ * 
+ * Driver file stubs
+ * Author: Segopotso Makhutja
+ * Date: April 2019
+ * 
+ */
+
+#include "Image.hpp"
 #include <iostream>
 
 #ifndef DRIVER_H
@@ -6,11 +14,12 @@
 
 #define STUB(method) void method() {std::cout<<"Todo: "<<#method<<"\n";}
 
+STUB(add);
+STUB(subtract);
 STUB(invertImage);
 STUB(mask);
-STUB(subtract);
-STUB(add);
 STUB(threshold);
+// extra credit, not requirement.
 STUB(filter)
 
 #endif
