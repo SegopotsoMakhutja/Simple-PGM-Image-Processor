@@ -6,7 +6,6 @@
  * 
  */
 
-#include "Image.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
