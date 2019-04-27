@@ -17,7 +17,10 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
+#define u_char unsigned char
+
 using namespace std;
+
 namespace MKHSEG001
 {
     class Image
@@ -30,21 +33,21 @@ namespace MKHSEG001
             ~Image();
             Image(string imgName);
             Image(int w, int h, u_char* imgData);
-            Image(const img& otherImg);
-            Image(img&& otherImg);
-            Image& operator = (const img& otherImg);
-            Image& operator = (img&& otherImg);                     
+            Image(const Image& otherImg);
+            Image(Image&& otherImg);
+            Image& operator = (const Image& otherImg);
+            Image& operator = (Image&& otherImg);                     
             /** end special memeber functions **/
 
             /** start operator overloading **/
-            Image operator + (const img& otherImg);
-            Image operator - (const img& otherImg);
-            Image operator / (const img& otherImg);
+            Image operator + (const Image& otherImg);
+            Image operator - (const Image& otherImg);
+            Image operator / (const Image& otherImg);
             Image operator * (int m);
             Image operator ! ();
             Image operator % (MKHSEG001::Matrix& m);
-            Image& operator = (const img& otherImg);
-            bool operator == (const img& otherImg);
+            Image& operator = (const Image& otherImg);
+            bool operator == (const Image& otherImg);
             /** end operator overloading **/
             
             /** start file operations **/
@@ -52,8 +55,8 @@ namespace MKHSEG001
             void load(string file);
             /** end file operations **/
             
-            /** start image operations **/
-            void checkImageDimensions(img* one, const Image& two);
+            void checkDimensions(Image* one, const Image& two);
+            /** start getters and setters **/
             int getWidth() const;
             int getHeight() const;
             int getSize() const;
@@ -62,11 +65,11 @@ namespace MKHSEG001
             void setSize(int s);
             void setImgData(u_char * d);
             u_char* getImgData();
-            /** end image operations **/
+            /** end getters and setters **/
             
             /** start I/O overloads **/
-            friend ifstream& operator >> (ifstream& inStream, img1& img2);
-            friend ofstream& operator << (ofstream& outStream, const img1& img2);
+            friend ifstream& operator >> (ifstream& inStream, Image& img2);
+            friend ofstream& operator << (ofstream& outStream, const Image& img2);
             /** end I/O overloads **/
 
             /** start Iterator definition **/
@@ -74,7 +77,7 @@ namespace MKHSEG001
             {
                 private:
                     friend class Image;
-                    unsigned char* ptr;
+                    u_char* ptr;
                 public:
                     // special members
                     ~Iterator();
