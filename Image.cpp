@@ -414,7 +414,82 @@ ifstream& operator >> (ifstream& in,  Image& img)
 /* <------------------------ end I/O overloads  ------------------------> */
 
 /* <------------------------ start file I/O ops  ------------------------> */
+// Loads image data from file
+void Image::load(string file)
+{
+    ifstream infile(file, ios::in | ios::binary);
 
+    if(!infile)
+    {
+        cout << "Error opening. " << file << endl;
+        exit(0);
+    }
+
+    string line = "EMPTY";
+
+    if(infile.is_open())
+    {
+        while(line != "255")
+        {
+            if(line.at(0) != '#' && line.at(0) != 'P' && line != "EMPTY")
+            {
+                stringstream ss;
+                ss << line;
+                ss >> height >> ws >> width >> ws;
+                break;
+            }
+            getline(infile, line);
+        }
+
+        getline(infile, line);
+        size = width * height;
+        u_char* imageData = new u_char[width * height];
+
+        infile.read((char*)imageData, size);
+
+        imgData.reset(imageData);
+
+        infile.close();
+    }
+    else
+    {
+        cout << "Unable to open file." << endl;
+    }
+}
+
+void Image::store(string outputImg)
+{
+    ofstream outFile(outputImg, ios::out|ios::binary);
+
+    if(!outFile)
+    {
+        cout << "Error opening "<< outputImg << endl;
+        exit(0);
+    }
+
+    unsigned char pixel;
+
+    if(outFile.is_open())
+    {
+        outFile << "P5" << endl;
+        outFile << width << " " << height << endl;
+        outFile << "255" << endl;
+
+        for(Image::Iterator iter = this->begin() ; iter != this->end() ; ++iter)
+        {
+            pixel  = *iter;
+            outFile.write((char*)&pixel,1);
+        }
+
+        outFile.close();
+
+        cout << "File saved successfully. " << endl;
+    }
+    else
+    {
+        cout << "Unable to open file." << endl;
+    }
+}
 /* <------------------------ end file I/O ops  ------------------------> */
 
 /* <-------- Check that two images have the same dimensions --------> */
