@@ -32,7 +32,7 @@ namespace MKHSEG001
             Image(int w, int h, u_char* imgData);
             Image(const img& otherImg);
             Image(img&& otherImg);
-            Image& operator = (const img& otherImg)
+            Image& operator = (const img& otherImg);
             Image& operator = (img&& otherImg);                     
             /** end special memeber functions **/
 
@@ -48,8 +48,8 @@ namespace MKHSEG001
             /** end operator overloading **/
             
             /** start file operations **/
-            void storeVals(string outputImg);
-            void loadVals(string file);
+            void store(string outputImg);
+            void load(string file);
             /** end file operations **/
             
             /** start image operations **/

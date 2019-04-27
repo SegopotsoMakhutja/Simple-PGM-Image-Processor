@@ -25,7 +25,6 @@ namespace MKHSEG001
             string operation;
             
         public:
-
             void add(string image1, string image2, string outImg);
 
             void subtract(string image1, string image2, string outImg);
@@ -38,6 +37,8 @@ namespace MKHSEG001
 
             // extra credit, not requirement
             void filter(string image, string filterName, string outImg);
+
+            void printUsage(void);
     };
 } // namespace Ops
 
