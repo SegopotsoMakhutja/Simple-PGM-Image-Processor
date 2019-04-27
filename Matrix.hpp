@@ -20,13 +20,12 @@ namespace MKHSEG001
     class Matrix
     {
         public:
-            // cons + decons
+            int N;
+            float* valPtr;
+            
             Matrix(string file);
             ~Matrix();
 
-            int N;
-            float* valPtr;
-            // get values from file
             void loadVals(string file);
     };
 } // namespace MKHSEG001

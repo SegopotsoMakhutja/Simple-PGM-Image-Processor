@@ -46,7 +46,6 @@ namespace MKHSEG001
             Image operator * (int m);
             Image operator ! ();
             Image operator % (MKHSEG001::Matrix& m);
-            Image& operator = (const Image& otherImg);
             bool operator == (const Image& otherImg);
             /** end operator overloading **/
             
