@@ -21,6 +21,7 @@
 using namespace MKHSEG001;
 using namespace std;
 
+/* <-------- end special memeber functions --------> */
 Image::Image(string imgName)
 {
     load(imgName);
@@ -82,80 +83,340 @@ Image::Image(Image&& otherImg)
     otherImg.imgData = nullptr;
 }
 
-// Assignment operator
-Image& Image::operator = (const Image& otherImage)
+Image& Image::operator = (const Image& otherImg)
 {
-
-    if(this == &otherImage)
+    if(this == &otherImg)
     {
         return *this;
     }
     else
     {
-        if(data != nullptr)
-        {
-            data = nullptr;
-        }
+        if(imgData != nullptr){ imgData = nullptr; }
 
-        width = otherImage.width;
-        height  = otherImage.height;
-
+        width = otherImg.width;
+        height  = otherImg.height;
         size = width * height;
+        int i = 0;
 
-        u_char* imageData = new u_char[width*height];
+        u_char* imageData  = new u_char[size];
 
-        for(int i = 0; i < size; i++)
+        while(i<size)
         {
-            imageData[i] = otherImage.data[i];
+            imageData[i] = otherImg.imgData[i];
+            i++;
         }
-
-        data.reset(imageData);
+        
+        imgData.reset(imageData);
     }
-
     return *this;
 }
 
-// Move assignment operator
-Image& Image::operator = (Image&& otherImage)
+Image& Image::operator = (Image&& otherImg)
 {
-    if(this == &otherImage)
+    if(this == &otherImg)
     {
         return *this;
     }
     else
     {
-        if (data != nullptr)
-        {
-            data = nullptr;
-        }
+        if (imgData != nullptr){ imgData = nullptr; }
 
-        width = otherImage.width;
-        height = otherImage.height;
-
+        width = otherImg.width;
+        height = otherImg.height;
         size = width * height;
+        int i = 0;
 
-        u_char* imageData = new u_char[width*height];
+        u_char* imageData  = new u_char[size];
 
-        for(int i = 0; i < size; i++)
+        while(i<size)
         {
-            imageData[i] = otherImage.data[i];
+            imageData[i] = otherImg.imgData[i];
+            i++;
         }
 
-        data.reset(imageData);
-
-        otherImage.width = 0;
-        otherImage.height = 0;
-        otherImage.size = 0;
-        otherImage.data = nullptr;
+        imgData.reset(imageData);
+        // clean up
+        otherImg.height = 0;
+        otherImg.width = 0;
+        otherImg.size = 0;
+        otherImg.imgData = nullptr;    
     }
-
     return *this;
 }
- 
+/* <-------- end of special memeber functions --------> */
+
+/* <-------- start of Iterator nav --------> */
+Image::Iterator Image::begin() const
+{
+    return  Iterator(&(imgData.get()[0]));
+}
+
+Image::Iterator Image::end() const
+{
+    return  Iterator(&(imgData.get()[size]));
+}
+/* <-------- end of Iterator nav --------> */
+
+/* <-------- start of operator overloading --------> */
+Image Image::operator + (const Image& otherImg)
+{
+    checkDimensions(this, otherImg);
+
+    Image img(*this);
+
+    Image::Iterator begin = img.begin();
+    Image::Iterator end = img.end();
+    Image::Iterator altBegin = otherImg.begin();
+    Image::Iterator altEnd = otherImg.end();
+
+    while(begin != end)
+    {
+        int res = *begin + *altBegin;
+        if(res > 255) { res = 255; }
+
+        *begin = res;
+
+        ++begin;
+        ++altBegin;
+    }
+
+    return img;
+}
+
+Image Image::operator - (const Image& otherImg)
+{
+    checkDimensions(this, otherImg);
+
+    Image img(*this);
+
+    Image::Iterator end = img.end();
+    Image::Iterator begin = img.begin();
+    Image::Iterator altBegin = otherImg.begin();
+
+    while(begin != end)
+    {
+        int res = *begin - *altBegin;
+
+        if(res < 0) { res = 0; }
+
+        *begin = res;
+
+        ++begin;
+        ++altBegin;
+    }
+
+    return img;
+}
+
+Image Image::operator * (int threshold)
+{
+
+    Image img(*this);
+
+    Image::Iterator begin = img.begin();
+    Image::Iterator end = img.end();
+
+    //for(Image::Iterator i = begin; i != end; ++i)
+    while(begin != end)
+    {
+        if(*begin > threshold) { *begin = 255; }
+        else { *begin = 0; }
+        ++begin;
+    }
+
+    return img;
+}
+
+Image Image::operator / (const Image& otherImg)
+{
+    checkDimensions(this, otherImg);
+
+    Image img(*this);
+    
+    Image::Iterator end = img.end();
+    Image::Iterator begin = img.begin();
+    Image::Iterator altBegin = otherImg.begin();
+    
+    while(begin != end)
+    {
+        if(*altBegin != 255) { *begin = 0; }
+
+        ++begin;
+        ++altBegin;
+    }
+
+    return img;
+}
+
+Image Image::operator ! ()
+{
+    Image imgArr(*this);
+
+    Image::Iterator begin = imgArr.begin();
+    Image::Iterator end = imgArr.end();
+
+    while(begin != end)
+    {
+        *begin = 255 - *begin;
+        ++begin;
+    }
+
+    return imgArr;
+}
+
+Image Image::operator % (Matrix& matrix)
+{
+    Image img(*this);
+    int dimension = matrix.N;
+    u_char* dataArr = new u_char[size]; // filtered image array
+    
+    for(int i = 0; i < height; i++)
+    {
+        for(int k = 0; k < width; k++)
+        {
+            int flow = 0;
+            for(int yVec = 0; yVec < dimension; yVec++)
+            {
+                for(int xVec = 0; xVec < dimension; xVec++)
+                {
+                    int y = (i - dimension/2 + yVec + height) % height;
+                    int x = (k - dimension/2 + xVec + width) % width;
+                
+                    float filterValue = matrix.valPtr[(yVec*dimension) + xVec];
+                    float  imageValue = imgData[(y * width) + x];
+                
+                    float result =  imageValue * filterValue;
+
+                    flow+=result;
+                }
+            }
+            
+            if(flow < 0) 
+            {
+                cout << "clamped" <<endl; 
+                flow = 0; 
+            }
+
+            if(flow > 255) 
+            {
+                cout << "clamped" <<endl; 
+                flow = 255; 
+            }
+            
+            dataArr[(i*width) + k] = flow;
+        }
+    }
+    
+    img.setImgData(dataArr);
+    
+    return img;
+}
+
+bool Image::operator == (const Image& otherImg)
+{
+    bool eq = true;
+
+    if(width != otherImg.getWidth()) { eq = false; }
+    if(height != otherImg.getHeight()) { eq = false; } 
+    if(size != otherImg.getSize()) { eq = false; }
+
+    for(int i = 0; i < size; i++)
+    {
+        if(imgData[i] != otherImg.imgData[i])
+        {
+            eq = false;
+            break;
+        }
+    }
+
+    return eq;
+}
+/* <-------- end of operator overloading --------> */
+
+/* <------------------------ start I/O overloads  ------------------------> */
+ofstream& operator << (ofstream& os, const Image& img)
+{
+    if(!os)
+    {
+        cout << "\nError opening file." << endl;
+        exit(0);
+    }
+    else
+    {
+        int row = img.getWidth(), col = img.getHeight();
+        Image::Iterator begin = img.begin(), end = img.end();
+        u_char pixel;
+
+        os << "P5" << endl;
+        os << col << " " << row << endl;
+        os << 255 << "\n" << endl;
+
+        /*
+        while(begin != end)
+        {
+            ++begin;
+            pixel = *begin;
+            os.write((char*)& pixel,1);
+        } */
+        
+        for(Image::Iterator iter = img.begin() ; iter != img.end() ; ++iter)
+        {
+            pixel  = *iter;
+            os.write((char*)&pixel,1);
+        }
+        return os; // comment out
+    }
+}
+
+ifstream& operator >> (ifstream& in,  Image& img)
+{
+    if(in)
+    {
+        string line = "EMPTY";
+
+        while(line != "255")
+        {
+            if(line == "255") { cout << "Line 255" << endl; }
+            cout << ">> Line = " << line << endl;
+
+            if(line.at(0) != 'P' && line.at(0) != '#' && line != "EMPTY")
+            {
+                cout << "Line = " << line << endl;
+                stringstream ss;
+                ss << line;
+                int w, h;
+
+                ss >> h >> ws >> w >> ws;
+
+                img.setHeight(h);
+                img.setWidth(w);
+                break;
+            }
+            getline(in, line);
+        }
+
+        img.setSize(img.getWidth() * img.getHeight());
+
+        u_char* imageData = new u_char[img.getSize()];
+
+        in.read((char*)imageData, img.getSize());
+
+        img.setImgData(imageData);
+        cout << "file read succesfully" <<endl;
+        return in; // comment line out
+    }
+    else
+    {
+        cout << "Error opening file" << endl;
+        exit(0);
+    }
+}
+/* <------------------------ end I/O overloads  ------------------------> */
+
 /* <-------- Check that two images have the same dimensions --------> */
-void Image::checkDimensions(Image* one, const Image& two)
+void Image::checkDimensions(Image* img_1, const Image& img_2)
 {
-    if(one->height != two.height || one->width != two.width)
+    if(img_1->width != img_2.width || img_1->height != img_2.height)
     {
         cout << "Images provided have different dimensions. Operations cannot be performed on the images." << endl;
         exit(0);
@@ -202,3 +463,5 @@ u_char * Image::getImgData()
 {
     return imgData.get();
 }
+/* <--------------------- end of Getters and setters ---------------------> */
+
