@@ -17,7 +17,7 @@ using namespace MKHSEG001;
 
 void Ops::add(string image1, string image2, string outImg)
 {
-    cout << "performing add operation on \"" << image1 << "\" & \"" << image2 << "\" "<< endl;
+    cout << "performing [add] operation on \"" << image1 << "\" & \"" << image2 << "\" "<< endl;
 
     Image img_1 = Image(image1);
     Image img_2 = Image(image2);
@@ -25,12 +25,12 @@ void Ops::add(string image1, string image2, string outImg)
     out.store(outImg);
 
     cout << "Add operation performed on \"" << image1 << "\" & \"" << image2 << "\" "<< endl;
-    cout << "View output in \"" << outImg << "\" " << endl;
+    cout << "output saved in \"" << outImg << "\" " << endl;
 }
 
-void subtract(string image1, string image2, string outImg)
+void Ops::subtract(string image1, string image2, string outImg)
 {
-    cout << "performing subtract operation on \"" << image1 << "\" & \"" << image2 << "\" "<< endl;
+    cout << "performing [subtract] operation on \"" << image1 << "\" & \"" << image2 << "\" "<< endl;
     
     Image img_1 = Image(image1);
     Image img_2 = Image(image2);
@@ -41,32 +41,53 @@ void subtract(string image1, string image2, string outImg)
     cout << "output saved in \"" << outImg << "\" " << endl;
 }
 
-void invert(string image1, string outImg)
+void Ops::invert(string image1, string outImg)
 {
-    cout << "performing invert operation on \"" << image1 << "\" " << endl;
+    cout << "performing [invert] operation on \"" << image1 << "\" " << endl;
 
     Image in(image1);
     Image out = !in;
     out.store(outImg);
 
     cout << "Invert operation performed on \"" << image1 << "\" " << endl;
-    cout << "View output in \"" << outImg << "\" " << endl;
+    cout << "output saved in \"" << outImg << "\" " << endl;
 }
 
-void mask(string image1, string image2, string outImg)
+void Ops::mask(string image1, string image2, string outImg)
 {
+    cout << "performing [mask] operation on \"" << image1 << "\" " << endl;
+    
+    Image img_1 = Image(image1);
+    Image img_2 = Image(image2);
+    Image out = img_1 / img_2;
+    out.store(outImg);
 
+    cout << "Mask operation performed on \"" << image1 << "\" and \"" << image2 << "\" "<< endl;
+    cout << "output saved in \"" << outImg << "\" " << endl;
 }
 
-void threshold(string image1, int threshold, string outImg)
+void Ops::threshold(string image1, int threshold, string outImg)
 {
+    cout << "performing [threshold] operation on \"" << image1 << "\" " << endl;
+    
+    Image in(image1);
+    Image out = in * threshold;
+    out.store(outImg);
 
+    cout << "output saved in \"" << outImg << "\" " << endl;
 }
 
-// extra credit, not requirement
-void filter(string image, string filterName, string outImg)
+/******************** extra credit, not requirement ********************/
+void Ops::filter(string image, string filterName, string outImg)
 {
-
+    cout << "performing [filtering] operation on \"" << image << "\" " << endl;
+    
+    Matrix matrix(filterName);
+    Image img(image);
+    Image out = img % matrix;
+    out.store(outImg);
+    
+    cout << "output saved in \"" << outImg << "\" " << endl;
 }
 
 void Ops::printUsage()
