@@ -302,7 +302,7 @@ Image Image::operator % (Matrix& matrix)
                 cout << "clamped" <<endl; 
                 flow = 255; 
             }
-            
+
             dataArr[(i*width) + k] = flow;
         }
     }
@@ -413,6 +413,10 @@ ifstream& operator >> (ifstream& in,  Image& img)
 }
 /* <------------------------ end I/O overloads  ------------------------> */
 
+/* <------------------------ start file I/O ops  ------------------------> */
+
+/* <------------------------ end file I/O ops  ------------------------> */
+
 /* <-------- Check that two images have the same dimensions --------> */
 void Image::checkDimensions(Image* img_1, const Image& img_2)
 {
@@ -465,3 +469,69 @@ u_char * Image::getImgData()
 }
 /* <--------------------- end of Getters and setters ---------------------> */
 
+/********************************************************************** 
+ *                                                                  ***
+ *                   Iterator helper class methods                  ***
+ *                                                                  ***
+ **********************************************************************/
+
+/* <-------- start of Iterator special members --------> */
+Image::Iterator::Iterator(u_char *p): i_ptr(p){}
+
+Image::Iterator::~Iterator() { i_ptr = nullptr; }
+
+Image::Iterator::Iterator(const Iterator& other)
+{
+    i_ptr = other.i_ptr;
+}
+
+Image::Iterator::Iterator(Iterator&& otherImg)
+{
+    i_ptr = otherImg.i_ptr;
+    otherImg.i_ptr = nullptr;
+}
+
+Image::Iterator&  Image::Iterator::operator = (const Iterator& other)
+{
+    if(this != &other) { i_ptr = other.i_ptr; }
+    return *this;
+}
+
+Image::Iterator&  Image::Iterator::operator = (Iterator&& other)
+{
+    if(this != &other) { i_ptr = other.i_ptr; }
+
+    other.i_ptr = nullptr;
+    return *this;
+}
+/* <-------- end of Iterator special members --------> */
+
+/* <-------- start of Iterator operator overloading --------> */
+Image::Iterator&  Image::Iterator::operator += (int num)
+{
+    i_ptr = i_ptr + num;
+    return *this;
+}
+
+bool Image::Iterator::operator != ( const Iterator& otherIterator)
+{
+    return (i_ptr != otherIterator.i_ptr);
+}
+
+const Image::Iterator& Image::Iterator::operator ++ ()
+{
+    ++i_ptr;
+    return *this;
+}
+
+const Image::Iterator& Image::Iterator::operator -- ()
+{
+    i_ptr--;
+    return *this;
+}
+
+u_char& Image::Iterator::operator * ()
+{
+    return *i_ptr;
+}
+/* <-------- end of Iterator operator overloading --------> */

@@ -54,7 +54,7 @@ namespace MKHSEG001
             void load(string file);
             /** end file operations **/
             
-            void checkDimensions(Image* one, const Image& two);
+            void checkDimensions(Image* img_1, const Image& img_2);
             /** start getters and setters **/
             int getWidth() const;
             int getHeight() const;
@@ -67,8 +67,8 @@ namespace MKHSEG001
             /** end getters and setters **/
             
             /** start I/O overloads **/
-            friend ifstream& operator >> (ifstream& inStream, Image& img2);
-            friend ofstream& operator << (ofstream& outStream, const Image& img2);
+            friend ifstream& operator >> (ifstream& in, Image& img);
+            friend ofstream& operator << (ofstream& out, const Image& img);
             /** end I/O overloads **/
 
             /** start Iterator definition **/
@@ -76,7 +76,7 @@ namespace MKHSEG001
             {
                 private:
                     friend class Image;
-                    u_char* ptr;
+                    u_char* i_ptr;
                 public:
                     // special members
                     ~Iterator();
