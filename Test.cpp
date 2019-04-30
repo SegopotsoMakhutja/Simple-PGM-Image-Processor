@@ -163,4 +163,83 @@ TEST_CASE("Inverting test")
     REQUIRE(pass == true);
 }
 
+TEST_CASE("Add Operation Test")
+{
+    Image img("Lenna_standard.pgm");
+    Image img_2("Lenna_hat_mask.pgm");
+    Image res_img = img + img_2;
+    
+    bool pass = true;
+    
+    int size = img.getSize();
+    
+    u_char* data = img.getImgData();
+    u_char* data_2 = img_2.getImgData();
+    
+    for(int i = 0; i < size; i++)
+    {
+        int sum = data[i] + data_2[i];
+        if(sum > 255)
+        {
+            sum = 255;
+        }
+        if(res_img.getImgData()[i] > 255)
+        {
+            pass = false;
+            cout << "Clamping Failed." << endl;
+            break;
+        }
+        else
+        {
+            if(res_img.getImgData()[i] != sum)
+            {
+                pass = false;
+                break;
+            }
+        }
+    }
+    REQUIRE(pass == true);
+}
+
+TEST_CASE("Subtract Operation Test")
+{
+    Image img("Lenna_standard.pgm");
+    Image img_2("Lenna_hat_mask.pgm");
+    Image res_img = img - img_2;
+    
+    bool pass = true;
+    
+    int size = img.getSize();
+    
+    u_char* data = img.getImgData();
+    u_char* data_2 = img_2.getImgData();
+    u_char* data_3 = res_img.getImgData();
+    
+    for(int i = 0; i < size; i++)
+    {
+        int diff = data[i] - data_2[i];
+
+        if(diff < 0)
+        {
+            diff = 0;
+        }
+
+        if(data_3[i] < 0)
+        {
+            pass = false;
+            cout << "Clamping Failed" << endl;
+            break;
+        }
+        else
+        {
+            if(res_img.getImgData()[i] != diff)
+            {
+                pass = false;
+                break;
+            }
+        }
+    }
+    REQUIRE(pass == true);
+}
+
 
