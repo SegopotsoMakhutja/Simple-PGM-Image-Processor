@@ -93,9 +93,10 @@ void Ops::filter(string image, string filterName, string outImg)
 void Ops::printUsage()
 {
     cout << "command line formats are as follows:\n" << endl;
-    cout << "-a[add] <image1> <image2> <output image>" << endl;
-    cout << "-s[subtract] <image1> <image2> <output image>" << endl;
-    cout << "-i[invert] <image> <output image>" << endl;
-    cout << "-l[mask] <image1> <image2> <output image>" << endl;
-    cout << "-t[threshold] <image> <threshold value> <output image>" << endl;
+    cout << "[add]      -a <image1> <image2> <output image>" << endl;
+    cout << "[subtract] -s <image1> <image2> <output image>" << endl;
+    cout << "[invert]   -i <image> <output image>" << endl;
+    cout << "[mask]     -l <image1> <image2> <output image>" << endl;
+    cout << "[threshold]-t <image> <threshold value> <output image>" << endl;
+    cout << "[filter]   -f <image> <filter> <output image>" << endl;
 }
