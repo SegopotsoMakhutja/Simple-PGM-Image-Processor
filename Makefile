@@ -9,7 +9,7 @@ SRCFILES:= $(wildcard *.cpp)
 OBJFILES:= $(patsubst %.cpp,%.o,$(SRCFILES))
 DEPFILES:= $(patsubst %.cpp,%.d,$(SRCFILES))
 
-PRODUCT := imageops # change name accordingly for each exe
+PRODUCT := imageops # change name accordingly for each assignment
 
 $(PRODUCT): $(OBJFILES)
 	$(CXX) $^ -o $@
@@ -26,7 +26,7 @@ clean:
 	@rm -f *.o *.d $(PRODUCT)
 
 def:
-	./$(PRODUCT) imageops 
+	./$(PRODUCT)
 	
 run:
 	./$(PRODUCT) imageops $(ARGS) 
