@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
         string directive(argv[1]);
         string img_1((string)argv[2]);
         string outputImg((string)argv[3]);
-        //if(directive.compare("-i") != 0){}
+
         if(directive != "-i")
         {
             cout << "missing some parameters." << endl;
@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
         string img_2((string)argv[3]);
         string outputImg((string)argv[4]);
 
-        char directive(*(argv[1]+1));
+        char directive(*(argv[1]+1)); // extract next char in directive supplied
         switch(directive)
         {
             // add
@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
                 break;
             }
             // filter
-            case '-g':
+            case '-f':
             {
                 string filter((string)argv[3]);
                 operation.filter(img_1,filter,outputImg);
@@ -117,7 +117,7 @@ int main(int argc, char* argv[])
     
     else
     {
-        cout << "eh eh eh what are you doing?? lmaaooo" << endl;
+        //cout << "eh eh eh what are you doing?? lmaaooo" << endl;
         operation.printUsage();
     }
 
