@@ -12,7 +12,9 @@
 #ifndef DRIVER_H
 #define DRIVER_H
 
-#define STUB(method) void method() { std::cout<<"To-Do: "<<#method<<endl; }
+using namespace std;
+
+#define STUB(operation) void operation() { cout<<"complete: "<<#operation<<endl; }
 
 STUB(add);
 STUB(subtract);
