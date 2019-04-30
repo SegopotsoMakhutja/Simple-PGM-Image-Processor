@@ -112,4 +112,55 @@ TEST_CASE("Testing Iterator")
     REQUIRE(iter != img.end());
 }
 
+TEST_CASE("Thresholding Test")
+{
+    Image img("Lenna_standard.pgm");
+    Image img_2 = img * 128;
+    int size = img.getSize();
+    int i = 0;
+    bool pass = true;
+
+    while (i<size)
+    {
+        int value = (int)img.getImgData()[i];
+        if(img.getImgData()[i] > 128)
+        {
+            value = 255;
+        }
+        else
+        {
+            value = 0;
+        }
+
+        if(img_2.getImgData()[i] != value)
+        {
+            pass = false;
+            cout << "Thresholding Fail" << endl;
+            break;
+        }
+        i++;
+    }
+    REQUIRE(pass == true);
+}
+
+TEST_CASE("Inverting test")
+{
+    Image img("Lenna_standard.pgm");
+    Image img_2 = !img;
+    bool pass = true;
+
+    for(int i = 0; i < img.getSize(); i++)
+    {
+        int val = 255 - (int)img.getImgData()[i];
+
+        if(img_2.getImgData()[i] != val)
+        {
+            pass = false;
+            cout << "Invert test not passed" << endl;
+            break;
+        }
+    }
+    REQUIRE(pass == true);
+}
+
 
