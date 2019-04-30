@@ -54,7 +54,7 @@ TEST_CASE("Testing Copy Assignment Operator")
     REQUIRE((img == img_2) == true);
 }
 
-TEST_CASE("Move constructor test")
+TEST_CASE("Testing Move Constructor")
 {
     Image img("Lenna_standard.pgm");
 
@@ -78,7 +78,7 @@ TEST_CASE("Move constructor test")
     REQUIRE((img == img_2) == false);
 }
 
-TEST_CASE("Move assignment operator test")
+TEST_CASE("Testing Move Assignment Operator")
 {
     Image img("Lenna_standard.pgm");
     Image img_2("Lenna_hat_mask.pgm");
@@ -95,3 +95,21 @@ TEST_CASE("Move assignment operator test")
     REQUIRE(otherImg.getSize() == s);
     REQUIRE(otherImg.getImgData() != nullptr);
 }
+
+TEST_CASE("Testing Iterator")
+{
+    Image img("Lenna_standard.pgm");
+    Image::Iterator iter = img.begin();
+    REQUIRE(*iter == img.getImgData()[0]);
+    ++iter;
+    REQUIRE(*iter == img.getImgData()[1]);
+    ++iter;
+    REQUIRE(*iter == img.getImgData()[2]);
+    --iter;
+    REQUIRE(*iter == img.getImgData()[1]);
+    --iter;
+    REQUIRE(*iter == img.getImgData()[0]);
+    REQUIRE(iter != img.end());
+}
+
+
