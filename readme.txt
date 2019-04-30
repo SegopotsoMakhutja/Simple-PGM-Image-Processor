@@ -1,27 +1,45 @@
 /**
-* ReadMe file
-* Author : Segopotso Makhutja 
-* March 2019
+* ReadMe file for Assignment 4: Image processing
+* Author : Segopotso Makhutja
+* [MKHSEG001]
+* April 2019
 */
-	
-- there are 5 files and a 2 folders in the tarball
-- MRI folder and a .git repo [ctrl + h  if hidden].
-- raw image files are in the basefolder MRI.
-- volimage.h is the header file with method declarations
-- volimage.cpp is the implementation file which contains all the method bodies/implementations
-- volimage_driver.cpp is the driver file which has the main method/entry function.
 
-compilation:
-	-in terminal extract tarball
-	-cd into root folder/directory of extracted tarball
-	-run make
-run:
-	-in terminal "make run" for default programme without operations.
-	- ./volimage <imageBase> [-d i j output_filename] [-x i output_filename] [-g i output_filename]
+### instructions:
+	- extract tarball  
+	- cd into root directory
+
+### files in root directory
+	- Driver.hpp	: Driver file stubs
+	- Driver.cpp	: Driver program, main entry.
+	- catch.hpp		: header file for testing framework
+	- Test.cpp		: used for unit testing implementation
+	- Image.hpp		: header file for image class and iterator
+	- Image.cpp		: implementation of image methods defined in the h file
+	- Matrix.hpp	: header file for matrix class definitions 
+	- Matrix.cpp	: implementation of matrix methods defined in the h file
+	- Ops.hpp		: header file for image operations
+	- Ops.cpp		: implementation of operation methods defined in the h file
+	- Makefile		: make file used for compiling
+	- ReadMe.txt	: readme file with instructions and notes
+	- *.pgm			: all raw image files upon which operations are performed
+	- sample_filters: folder containing all filters [*.fir]
+
+### compilation:
+	- in terminal type `make` and enter.
+
+### run:
+	- once done compiling
+	- in terminal type `make run` it will show you command line args
 	- each flag must be run separately in different instances.
+
+### test:
+	- `make test` on terminal
+
 clean:
 	- make clean deletes all binary files that were compiled.
 
 **CAUTIONS:
 	- make sure images are in folders within the programme directory
 	- the name of the folder containing the images must be the same as the prefixes of the images
+	- to test for the filters, move or copy them from their folder into the working directory.
